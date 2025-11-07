@@ -14,8 +14,6 @@ import 'package:corpfinity_employee_app/features/activities/screens/activity_lib
 import 'package:corpfinity_employee_app/features/progress/screens/progress_screen.dart';
 import 'package:corpfinity_employee_app/features/profile/screens/profile_screen.dart';
 import 'package:corpfinity_employee_app/features/challenges/screens/challenge_flow_screen.dart';
-import 'package:corpfinity_employee_app/features/challenges/screens/elegant_challenge_creation_screen.dart';
-
 /// Application router configuration using GoRouter
 /// 
 /// Defines all navigation routes for the Corpfinity Employee App
@@ -57,10 +55,10 @@ class AppRouter {
         name: 'challenge-create',
         builder: (context, state) => const ChallengeFlowScreen(),
       ),
-      // Deprecated alias: point elegant route to the merged ChallengeFlowScreen
+      // Alternate route pointing to the unified ChallengeFlowScreen
       GoRoute(
-        path: '/challenge/elegant-create',
-        name: 'elegant-challenge-create',
+        path: '/challenge/challenge_flow_screen',
+        name: 'challenge-flow-screen',
         builder: (context, state) => const ChallengeFlowScreen(),
       ),
 

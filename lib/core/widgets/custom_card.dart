@@ -56,6 +56,10 @@ class CustomCard extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(AppDimensions.cardBorderRadius),
+            splashColor: AppColors.calmBlue.withOpacity(0.2),
+            highlightColor: AppColors.calmBlue.withOpacity(0.1),
+            // Requirement 5.1: Ripple duration set to 300ms
+            splashFactory: InkRipple.splashFactory,
             child: ConstrainedBox(
               constraints: const BoxConstraints(
                 minHeight: AppDimensions.minTouchTarget,

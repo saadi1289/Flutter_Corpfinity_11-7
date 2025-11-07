@@ -37,7 +37,10 @@ class AppDimensions {
   static const double iconSizeXLarge = 48.0;
 
   // Touch Target Sizes (Accessibility)
+  // Requirement 16.1: Minimum 44x44 points for all interactive elements
   static const double minTouchTarget = 44.0;
+  static const double minTouchTargetSpacing = 8.0; // Minimum spacing between touch targets
+  static const double navItemTouchTarget = 48.0; // Navigation items should be 48x48 points
 
   // Screen Padding
   static const double screenPaddingHorizontal = 16.0;
