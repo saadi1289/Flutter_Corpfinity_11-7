@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/constants/typography.dart';
+import '../../../core/widgets/main_scaffold.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/settings_section.dart';
@@ -37,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
@@ -53,13 +54,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: AppColors.primaryGradient,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
       ),
-      body: Consumer<ProfileProvider>(
+      child: Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
           final user = profileProvider.currentUser;
 

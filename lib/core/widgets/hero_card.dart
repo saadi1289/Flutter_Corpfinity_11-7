@@ -10,7 +10,7 @@ import 'animated_progress_bar.dart';
 /// 
 /// Features:
 /// - Circular avatar with responsive sizing (56px/64px/72px for small/medium/large)
-/// - Gradient background (calmBlue to softGreen)
+/// - Gradient background (turquoise to white)
 /// - Animated progress bar with gradient fill (800ms animation on mount)
 /// - Level display text
 /// - Responsive card height: 160px/180px/200px for small/medium/large screens
@@ -192,9 +192,9 @@ class HeroCard extends StatelessWidget {
   // Optimized gradient decoration - reused to avoid recreation
   static const BoxDecoration _gradientDecoration = BoxDecoration(
     gradient: LinearGradient(
-      colors: [AppColors.calmBlue, AppColors.softGreen],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+      colors: AppColors.primaryGradient,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
     ),
   );
 }

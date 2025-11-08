@@ -97,8 +97,15 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
             Text(
               'Level Progress',
               style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.white.withOpacity(0.9),
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: const Offset(0, 1),
+                    blurRadius: 3,
+                  ),
+                ],
               ),
             ),
             AnimatedBuilder(
@@ -108,8 +115,15 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
                 return Text(
                   '$percent%',
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.white.withOpacity(0.9),
+                    color: AppColors.white,
                     fontWeight: FontWeight.w600,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.3),
+                        offset: const Offset(0, 1),
+                        blurRadius: 3,
+                      ),
+                    ],
                   ),
                 );
               },
@@ -136,7 +150,14 @@ class _AnimatedProgressIndicatorState extends State<AnimatedProgressIndicator>
         Text(
           'Next level at 100%',
           style: AppTypography.bodySmall.copyWith(
-            color: AppColors.white.withOpacity(0.7),
+            color: AppColors.white,
+            shadows: [
+              Shadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(0, 1),
+                blurRadius: 3,
+              ),
+            ],
           ),
         ),
       ],

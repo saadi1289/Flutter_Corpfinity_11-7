@@ -5,6 +5,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/constants/typography.dart';
 import '../../../core/widgets/activity_card.dart';
+import '../../../core/widgets/main_scaffold.dart';
 import '../../../data/models/activity.dart';
 import '../../../data/models/enums.dart';
 import '../providers/activity_provider.dart';
@@ -49,10 +50,10 @@ class _ActivityLibraryScreenState extends State<ActivityLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       backgroundColor: AppColors.white,
       appBar: _buildAppBar(context),
-      body: Column(
+      child: Column(
         children: [
           _buildSearchAndFilter(context),
           Expanded(

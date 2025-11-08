@@ -49,6 +49,13 @@ class UserLevelBadge extends StatelessWidget {
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.white,
               fontWeight: FontWeight.w600,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(0, 1),
+                  blurRadius: 3,
+                ),
+              ],
             ),
           ),
         ],

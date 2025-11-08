@@ -82,17 +82,11 @@ class _WelcomeCarouselState extends State<WelcomeCarousel> {
           Positioned.fill(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 600),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: const [
-                    AppColors.calmBlue,
-                    AppColors.softGreen,
-                  ],
-                  stops: [
-                    0.1 + (_currentPage * 0.05),
-                    0.9 - (_currentPage * 0.05),
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: AppColors.appGradient,
                   ],
                 ),
               ),

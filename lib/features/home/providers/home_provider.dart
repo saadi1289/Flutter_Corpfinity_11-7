@@ -429,19 +429,31 @@ class HomeProvider extends ChangeNotifier {
       // TODO: Replace with actual repository call when backend is integrated
       await Future.delayed(const Duration(milliseconds: 300));
       
-      // Mock featured items
+      // Mock featured items with cohesive gradient colors
       final items = [
-        const CarouselItem(
+        CarouselItem(
           title: 'Mindful Meditation',
           description: 'Start your day with a 10-minute guided meditation',
+          gradientColors: [
+            const Color(0xFF667eea), // Soft purple
+            const Color(0xFF764ba2), // Deep purple
+          ],
         ),
-        const CarouselItem(
+        CarouselItem(
           title: 'Team Yoga Session',
           description: 'Join our weekly yoga class every Wednesday at 5 PM',
+          gradientColors: [
+            const Color(0xFF56ab2f), // Fresh green
+            const Color(0xFFa8e063), // Light green
+          ],
         ),
-        const CarouselItem(
+        CarouselItem(
           title: 'Wellness Challenge',
           description: 'Complete 30 days of daily activities and win rewards',
+          gradientColors: [
+            const Color(0xFFf093fb), // Soft pink
+            const Color(0xFFf5576c), // Coral red
+          ],
         ),
       ];
       

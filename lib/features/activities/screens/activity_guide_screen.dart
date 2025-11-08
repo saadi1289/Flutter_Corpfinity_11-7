@@ -196,9 +196,9 @@ class _ActivityGuideScreenState extends State<ActivityGuideScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppDimensions.radiusLarge),
         gradient: const LinearGradient(
-          colors: [AppColors.calmBlue, AppColors.softGreen],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          colors: AppColors.primaryGradient,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: const Icon(

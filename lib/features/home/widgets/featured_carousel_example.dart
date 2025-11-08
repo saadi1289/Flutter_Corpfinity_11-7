@@ -15,7 +15,7 @@ class FeaturedCarouselExample extends StatelessWidget {
       CarouselItem(
         title: 'Mindful Meditation',
         description: 'Start your day with a 10-minute guided meditation',
-        gradientColors: const [AppColors.calmBlue, AppColors.softGreen],
+        gradientColors: AppColors.primaryGradient,
         onTap: () {
           // Navigate to meditation activity
           debugPrint('Navigate to meditation');

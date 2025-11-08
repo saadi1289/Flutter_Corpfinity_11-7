@@ -109,7 +109,7 @@ class _CircularTimerPainter extends CustomPainter {
     final progressPaint = Paint()
       ..shader = LinearGradient(
         colors: isRunning 
-            ? [AppColors.calmBlue, AppColors.softGreen]
+            ? AppColors.primaryGradient
             : [AppColors.mediumGray, AppColors.mediumGray],
       ).createShader(Rect.fromCircle(center: center, radius: radius))
       ..style = PaintingStyle.stroke

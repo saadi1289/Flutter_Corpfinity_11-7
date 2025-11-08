@@ -7,7 +7,7 @@ import '../constants/typography.dart';
 /// multi-layered shadows, and smooth animations for the challenge generation flow.
 /// 
 /// Features:
-/// - Gradient background from calmBlue to softGreen
+/// - Gradient background from turquoise to white
 /// - Multi-layered shadow effects
 /// - Scale animation on press (1.0 to 0.98)
 /// - Ripple effect with white color at 20% opacity
@@ -110,9 +110,9 @@ class _ElegantGenerateButtonState extends State<ElegantGenerateButton>
                   ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [AppColors.calmBlue, AppColors.softGreen],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      colors: AppColors.primaryGradient,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusLarge),
                     boxShadow: [

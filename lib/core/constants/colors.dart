@@ -42,13 +42,37 @@ class AppColors {
   static const Color error = gentleRed;
   static const Color info = calmBlue;
 
-  // Gradient Colors (for splash screen only)
-  static const List<Color> splashGradient = [
-    Color(0xFF667eea), // Soft purple
-    Color(0xFF764ba2), // Deep purple
+  // Gradient Colors - Turquoise to White gradient used throughout the app
+  static const List<Color> appGradient = [
+    Color(0xFF64dfdf),
+    Color(0xFF78e2e2),
+    Color(0xFF8be6e5),
+    Color(0xFF9be9e9),
+    Color(0xFFabecec),
+    Color(0xFFbaf0ef),
+    Color(0xFFc8f3f2),
+    Color(0xFFd6f6f5),
+    Color(0xFFe4f9f9),
+    Color(0xFFf2fcfc),
   ];
-  static const List<Color> primaryGradient = [calmBlue, softGreen];
-  static const List<Color> successGradient = [softGreen, white];
+  
+  // Shorter gradient variations for different use cases
+  static const List<Color> primaryGradient = [
+    Color(0xFF64dfdf),
+    Color(0xFF9be9e9),
+    Color(0xFFd6f6f5),
+  ];
+  
+  static const List<Color> splashGradient = [
+    Color(0xFF64dfdf),
+    Color(0xFF8be6e5),
+    Color(0xFFbaf0ef),
+  ];
+  
+  static const List<Color> successGradient = [
+    Color(0xFF78e2e2),
+    Color(0xFFf2fcfc),
+  ];
 
   // Private constructor to prevent instantiation
   AppColors._();

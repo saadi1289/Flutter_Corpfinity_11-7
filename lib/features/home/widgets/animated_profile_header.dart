@@ -48,12 +48,19 @@ class AnimatedProfileHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // User name
+              // User name with shadow for better visibility
               Text(
                 userName,
                 style: AppTypography.displayMedium.copyWith(
                   color: AppColors.white,
                   fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(0, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

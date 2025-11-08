@@ -112,10 +112,7 @@ class _AnimatedHeroSectionState extends State<AnimatedHeroSection>
         height: heroHeight,
         child: ParallaxBackground(
           scrollController: widget.scrollController,
-          gradientColors: const [
-            AppColors.calmBlue,
-            AppColors.softGreen,
-          ],
+          gradientColors: AppColors.appGradient,
           parallaxFactor: 0.5,
           enableParallax: widget.enableParallax,
           child: Container(

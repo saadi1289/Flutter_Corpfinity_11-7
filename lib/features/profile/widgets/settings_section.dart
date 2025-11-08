@@ -42,16 +42,16 @@ class SettingsSection extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.calmBlue.withOpacity(0.3),
-                AppColors.softGreen.withOpacity(0.2),
+                const Color(0xFF64dfdf).withOpacity(0.3),
+                const Color(0xFFd6f6f5).withOpacity(0.2),
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
             borderRadius: BorderRadius.circular(AppDimensions.radiusXLarge),
             boxShadow: [
               BoxShadow(
-                color: AppColors.calmBlue.withOpacity(0.1),
+                color: const Color(0xFF64dfdf).withOpacity(0.1),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(0, 8),

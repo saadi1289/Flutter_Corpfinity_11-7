@@ -22,14 +22,10 @@ class ProfileHeader extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppDimensions.spacing32),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.calmBlue,
-            AppColors.calmBlue.withBlue(255),
-            AppColors.softGreen,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        gradient: const LinearGradient(
+          colors: AppColors.primaryGradient,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(AppDimensions.radiusXLarge + 8),
@@ -37,7 +33,7 @@ class ProfileHeader extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.calmBlue.withOpacity(0.3),
+            color: const Color(0xFF64dfdf).withOpacity(0.3),
             blurRadius: 24,
             spreadRadius: 0,
             offset: const Offset(0, 12),

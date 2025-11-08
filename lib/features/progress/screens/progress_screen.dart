@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/typography.dart';
 import '../../../core/constants/dimensions.dart';
+import '../../../core/widgets/main_scaffold.dart';
 import '../../../data/models/badge.dart' as models;
 import '../providers/progress_provider.dart';
 import '../widgets/streak_calendar.dart';
@@ -57,7 +58,7 @@ class _ProgressScreenState extends State<ProgressScreen> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -81,7 +82,7 @@ class _ProgressScreenState extends State<ProgressScreen> with SingleTickerProvid
           ],
         ),
       ),
-      body: Consumer<ProgressProvider>(
+      child: Consumer<ProgressProvider>(
         builder: (context, progressProvider, child) {
           if (progressProvider.isLoading) {
             return const Center(

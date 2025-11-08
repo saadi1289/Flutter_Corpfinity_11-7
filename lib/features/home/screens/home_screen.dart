@@ -6,7 +6,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/widgets/supportive_section_card.dart';
 import '../../../core/widgets/create_challenge_card.dart';
-import '../../../core/widgets/animated_bottom_navigation.dart';
+import '../../../core/widgets/main_scaffold.dart';
 import '../providers/home_provider.dart';
 import '../widgets/animated_hero_section.dart';
 import '../widgets/featured_carousel.dart';
@@ -105,9 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       backgroundColor: AppColors.white,
-      body: SafeArea(
+      child: SafeArea(
         child: Consumer<HomeProvider>(
           builder: (context, provider, child) {
             final state = provider.state;
@@ -246,9 +246,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-      
-      // Bottom Navigation Bar (placeholder for future implementation)
-      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
@@ -269,55 +266,5 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     
     return tips[dayOfYear % tips.length];
-  }
-
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    // Define navigation items
-    final navigationItems = [
-      const NavigationItem(
-        icon: Icons.home_rounded,
-        label: 'Home',
-        route: '/home',
-      ),
-      const NavigationItem(
-        icon: Icons.library_books_rounded,
-        label: 'Library',
-        route: '/library',
-      ),
-      const NavigationItem(
-        icon: Icons.trending_up_rounded,
-        label: 'Progress',
-        route: '/progress',
-      ),
-      const NavigationItem(
-        icon: Icons.person_rounded,
-        label: 'Profile',
-        route: '/profile',
-      ),
-    ];
-
-    // Determine current index based on current route
-    final currentRoute = GoRouterState.of(context).uri.path;
-    int currentIndex = 0;
-    for (int i = 0; i < navigationItems.length; i++) {
-      if (currentRoute == navigationItems[i].route) {
-        currentIndex = i;
-        break;
-      }
-    }
-
-    return AnimatedBottomNavigation(
-      currentIndex: currentIndex,
-      items: navigationItems,
-      onTap: (index) {
-        // Navigate to the selected route using GoRouter
-        // Requirement 13.3: Immediate tap feedback (<100ms)
-        // Requirement 15.1: Navigation callbacks with GoRouter integration
-        final route = navigationItems[index].route;
-        if (currentRoute != route) {
-          context.go(route);
-        }
-      },
-    );
   }
 }

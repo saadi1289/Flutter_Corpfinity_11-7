@@ -5,6 +5,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/constants/typography.dart';
 import '../../../core/widgets/custom_button.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/utils/error_handler.dart';
 import '../providers/auth_provider.dart';
@@ -103,6 +104,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: AppDimensions.spacing32),
+              
+              // Corpfinity Logo
+              const Center(
+                child: AppLogo.medium(),
+              ),
+              
+              const SizedBox(height: AppDimensions.spacing24),
               
               // Header
               Text(

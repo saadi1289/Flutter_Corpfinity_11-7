@@ -219,8 +219,8 @@ class _CarouselItemWidget extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: item.gradientColors ?? [
-                  AppColors.calmBlue,
-                  AppColors.softGreen,
+                  const Color(0xFF4A90E2), // Calm blue
+                  const Color(0xFF64dfdf), // Turquoise
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
