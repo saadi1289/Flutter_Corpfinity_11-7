@@ -7,11 +7,14 @@ import 'package:corpfinity_employee_app/core/constants/typography.dart';
 import 'package:corpfinity_employee_app/core/widgets/selection_card.dart';
 import 'package:corpfinity_employee_app/core/widgets/challenge_display_card.dart';
 import 'package:corpfinity_employee_app/core/widgets/static_challenge_card.dart';
+import 'package:corpfinity_employee_app/core/widgets/custom_button.dart';
 import 'package:corpfinity_employee_app/data/repositories/static_challenge_repository.dart';
 import 'package:corpfinity_employee_app/core/utils/responsive_helper.dart';
 import 'package:corpfinity_employee_app/data/models/enums.dart';
 import 'package:corpfinity_employee_app/data/models/enum_helpers.dart';
 import 'package:corpfinity_employee_app/features/challenges/providers/challenge_flow_provider.dart';
+import 'package:corpfinity_employee_app/features/activities/providers/activity_provider.dart';
+import 'package:corpfinity_employee_app/data/models/activity.dart';
 
 /// ChallengeFlowScreen - Multi-step challenge creation flow
 /// 
@@ -651,31 +654,15 @@ class _ChallengeFlowScreenState extends State<ChallengeFlowScreen>
                                   ),
                                 ),
                                 const SizedBox(height: AppDimensions.spacing24),
-                                // Start Challenge button
-                                Semantics(
-                                  label: 'Start this wellness challenge',
-                                  button: true,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      _handleStartChallenge(context, provider);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.calmBlue,
-                                      foregroundColor: AppColors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: AppDimensions.spacing16,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          AppDimensions.buttonBorderRadius,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Start Challenge',
-                                      style: AppTypography.buttonLarge,
-                                    ),
-                                  ),
+                                // Start Challenge button - uses app's CustomButton for consistent styling
+                                CustomButton(
+                                  text: 'Start Challenge',
+                                  onPressed: () {
+                                    _handleStartChallenge(context, provider);
+                                  },
+                                  variant: ButtonVariant.primary,
+                                  size: ButtonSize.large,
+                                  semanticLabel: 'Start this wellness challenge',
                                 ),
                               ],
                               ],
@@ -907,27 +894,111 @@ class _ChallengeFlowScreenState extends State<ChallengeFlowScreen>
   }
 
   /// Handle Start Challenge button tap
-  /// Placeholder navigation - will be implemented in future tasks
-  void _handleStartChallenge(
+  /// Loads a recommended activity based on user's selections and navigates
+  /// to the ActivityGuideScreen to preserve identical UX/timer behavior
+  Future<void> _handleStartChallenge(
     BuildContext context,
     ChallengeFlowProvider provider,
-  ) {
-    // Show confirmation snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Challenge started! This will navigate to the challenge tracking screen.'),
-        backgroundColor: AppColors.calmBlue,
-        duration: const Duration(seconds: 2),
-      ),
+  ) async {
+    final energy = provider.selectedEnergy;
+    final location = provider.selectedLocation;
+    final goal = provider.selectedGoal;
+
+    if (energy == null || location == null || goal == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please complete energy, location, and goal selections.'),
+          backgroundColor: Colors.redAccent,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final pillarId = _pillarIdForGoal(goal);
+    final desiredLocation = _locationStringForContext(location);
+
+    final activityProvider = context.read<ActivityProvider>();
+    // Ensure activities are loaded
+    if (activityProvider.activities.isEmpty && activityProvider.isLoading == false) {
+      try {
+        await activityProvider.loadActivities();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load activities: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        return;
+      }
+    }
+
+    // Get recommended activities and try to match location
+    var recommended = activityProvider.getRecommendedActivities(
+      energyLevel: energy,
+      pillarId: pillarId,
     );
 
-    // Placeholder: Navigate back to home after a delay
-    // In future, this will navigate to a challenge tracking/detail screen
-    Future.delayed(const Duration(seconds: 2), () {
-      if (context.mounted) {
-        context.go('/home');
+    Activity? chosen;
+    if (recommended.isNotEmpty) {
+      chosen = recommended.firstWhere(
+        (a) => a.location.toLowerCase() == desiredLocation.toLowerCase() || desiredLocation == 'Anywhere',
+        orElse: () => recommended.first,
+      );
+    } else {
+      // Fall back to any activity within the pillar
+      final fallback = activityProvider.getActivitiesByPillar(pillarId);
+      if (fallback.isNotEmpty) {
+        chosen = fallback.first;
       }
-    });
+    }
+
+    if (chosen == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No matching activities found for your selections.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    // Immediate start: navigate to the guide screen for identical step/timer UX
+    context.go('/activity/${chosen.id}');
+  }
+
+  /// Map WellnessGoal to pillar IDs used by ActivityProvider/WellnessPillarProvider
+  String _pillarIdForGoal(WellnessGoal goal) {
+    switch (goal) {
+      case WellnessGoal.stressReduction:
+        return 'stress-reduction';
+      case WellnessGoal.increasedEnergy:
+        return 'increased-energy';
+      case WellnessGoal.betterSleep:
+        return 'better-sleep';
+      case WellnessGoal.physicalFitness:
+        return 'physical-fitness';
+      case WellnessGoal.healthyEating:
+        return 'healthy-eating';
+      case WellnessGoal.socialConnection:
+        return 'social-connection';
+    }
+  }
+
+  /// Map LocationContext to the string labels used in mock activities
+  String _locationStringForContext(LocationContext context) {
+    switch (context) {
+      case LocationContext.home:
+        return 'Anywhere';
+      case LocationContext.office:
+        return 'Desk';
+      case LocationContext.outdoor:
+        return 'Outdoor';
+      case LocationContext.gym:
+        // Fallback as some mock activities may not have explicit 'Gym'
+        return 'Anywhere';
+    }
   }
 
   Widget _buildGoalCard(

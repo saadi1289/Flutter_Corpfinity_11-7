@@ -5,7 +5,7 @@ import 'package:corpfinity_employee_app/core/constants/colors.dart';
 
 void main() {
   group('CreateChallengeCard Widget Tests', () {
-    testWidgets('renders with Create Challenge button text', (WidgetTester tester) async {
+    testWidgets('renders with Start Your Challenge button text', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -16,7 +16,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Create Challenge'), findsOneWidget);
+      expect(find.text('Start Your Challenge'), findsOneWidget);
     });
 
     testWidgets('has correct height of 120px', (WidgetTester tester) async {
@@ -37,7 +37,7 @@ void main() {
       expect(container.constraints?.maxHeight, 120);
     });
 
-    testWidgets('has warmOrange background with 10% opacity', (WidgetTester tester) async {
+    testWidgets('has calmBlue background with 10% opacity', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -53,10 +53,10 @@ void main() {
       );
       final decoration = container.decoration as BoxDecoration;
       
-      expect(decoration.color, AppColors.warmOrange.withOpacity(0.1));
+      expect(decoration.color, AppColors.calmBlue.withOpacity(0.1));
     });
 
-    testWidgets('has 2px solid warmOrange border', (WidgetTester tester) async {
+    testWidgets('has 2px solid calmBlue border', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -74,11 +74,11 @@ void main() {
       
       expect(decoration.border, isA<Border>());
       final border = decoration.border as Border;
-      expect(border.top.color, AppColors.warmOrange);
+      expect(border.top.color, AppColors.calmBlue);
       expect(border.top.width, 2);
     });
 
-    testWidgets('button has warmOrange background', (WidgetTester tester) async {
+    testWidgets('button has calmBlue background', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -96,7 +96,7 @@ void main() {
       
       expect(
         buttonStyle?.backgroundColor?.resolve({}),
-        AppColors.warmOrange,
+        AppColors.calmBlue,
       );
     });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../auth/models/user.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/dimensions.dart';
 import '../../../core/constants/typography.dart';
@@ -27,6 +28,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Controllers for editable user details
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _companyController = TextEditingController();
+  final TextEditingController _goalsController = TextEditingController();
+  bool _formInitialized = false;
+  // Local notification state for guest (unauthenticated) mode
+  bool _notifEnabled = true;
+  bool _dailyReminders = true;
+  bool _achievementAlerts = true;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +45,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileProvider>().loadSettings();
     });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _companyController.dispose();
+    _goalsController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveUserDetails(
+    BuildContext context,
+    ProfileProvider profileProvider,
+  ) async {
+    final name = _nameController.text.trim();
+    final companyText = _companyController.text.trim();
+    final company = companyText.isEmpty ? null : companyText;
+
+    // Parse comma-separated goals into a clean list
+    final goals = _goalsController.text
+        .split(',')
+        .map((g) => g.trim())
+        .where((g) => g.isNotEmpty)
+        .toList();
+
+    // If authenticated, persist changes via provider
+    if (profileProvider.currentUser != null) {
+      try {
+        await profileProvider.updateProfile(
+          name: name.isEmpty ? profileProvider.currentUser?.name : name,
+          company: company,
+          wellnessGoals: goals.isEmpty
+              ? profileProvider.currentUser?.wellnessGoals
+              : goals,
+        );
+
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully'),
+          ),
+        );
+      } catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to update profile. Please try again.'),
+          ),
+        );
+      }
+    } else {
+      // Guest mode: update local state only and show full page without auth
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Changes saved (local preview)'),
+        ),
+      );
+      setState(() {
+        // No persistence in guest mode; controllers already hold latest values
+      });
+    }
   }
 
   @override
@@ -63,11 +136,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
           final user = profileProvider.currentUser;
+          final bool isGuest = user == null;
+          final User effectiveUser = user ?? User(
+            id: 'guest',
+            email: 'guest@corpfinity.app',
+            name: 'Your Name',
+            company: null,
+            photoUrl: null,
+            wellnessGoals: const [],
+            notifications: NotificationPreferences(),
+            totalPoints: 0,
+            createdAt: DateTime.now(),
+          );
 
-          if (user == null) {
-            return const Center(
-              child: Text('No user data available'),
-            );
+          // Initialize form controllers once with current user values
+          if (!_formInitialized) {
+            _nameController.text = effectiveUser.name;
+            _companyController.text = effectiveUser.company ?? '';
+            _goalsController.text = effectiveUser.wellnessGoals.join(', ');
+            // Initialize local notification state
+            _notifEnabled = effectiveUser.notifications.enabled;
+            _dailyReminders = effectiveUser.notifications.dailyReminders;
+            _achievementAlerts = effectiveUser.notifications.achievementAlerts;
+            _formInitialized = true;
           }
 
           return SingleChildScrollView(
@@ -75,12 +166,123 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 // Profile Header
                 ProfileHeader(
-                  name: user.name,
-                  photoUrl: user.photoUrl,
-                  totalPoints: user.totalPoints,
+                  name: effectiveUser.name,
+                  photoUrl: effectiveUser.photoUrl,
+                  totalPoints: effectiveUser.totalPoints,
                 ),
 
                 const SizedBox(height: AppDimensions.spacing32),
+
+                // User Details (editable)
+                SettingsSection(
+                  title: 'Your Details',
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.spacing20,
+                        vertical: AppDimensions.spacing16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Email (read-only)
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.email_outlined,
+                                color: AppColors.calmBlue,
+                              ),
+                              const SizedBox(width: AppDimensions.spacing12),
+                              Expanded(
+                                child: Text(
+                                  effectiveUser.email,
+                                  style: AppTypography.bodyMedium.copyWith(
+                                    color: AppColors.mediumGray,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppDimensions.spacing16),
+
+                          // Name
+                          TextField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Full Name',
+                              hintText: 'Enter your full name',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: AppDimensions.spacing16),
+
+                          // Company
+                          TextField(
+                            controller: _companyController,
+                            decoration: const InputDecoration(
+                              labelText: 'Company (optional)',
+                              hintText: 'Enter your company name',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: AppDimensions.spacing16),
+
+                          // Wellness Goals
+                          TextField(
+                            controller: _goalsController,
+                            minLines: 1,
+                            maxLines: 2,
+                            decoration: const InputDecoration(
+                              labelText: 'Wellness Goals',
+                              hintText:
+                                  'e.g., Stress Reduction, Better Sleep, Mindfulness',
+                              helperText:
+                                  'Separate multiple goals with commas',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+
+                          const SizedBox(height: AppDimensions.spacing16),
+
+                          // Save button
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: ElevatedButton.icon(
+                              onPressed: profileProvider.isLoading
+                                  ? null
+                                  : () => _saveUserDetails(
+                                        context,
+                                        profileProvider,
+                                      ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.calmBlue,
+                                foregroundColor: AppColors.white,
+                              ),
+                              icon: profileProvider.isLoading
+                                  ? const SizedBox(
+                                      height: 18,
+                                      width: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation(
+                                          AppColors.white,
+                                        ),
+                                      ),
+                                    )
+                                  : const Icon(Icons.save_rounded),
+                              label: Text(
+                                profileProvider.isLoading
+                                    ? 'Saving...'
+                                    : 'Save Changes',
+                                style: AppTypography.buttonMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
 
                 // Notification Settings Section
                 SettingsSection(
@@ -89,32 +291,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SettingsToggle(
                       title: 'Enable Notifications',
                       subtitle: 'Receive wellness reminders and updates',
-                      value: user.notifications.enabled,
+                      value: _notifEnabled,
                       onChanged: (value) {
-                        profileProvider.updateNotificationPreferences(
-                          enabled: value,
-                        );
+                        if (isGuest) {
+                          setState(() => _notifEnabled = value);
+                        } else {
+                          profileProvider.updateNotificationPreferences(
+                            enabled: value,
+                          );
+                        }
                       },
                     ),
-                    if (user.notifications.enabled) ...[
+                    if (_notifEnabled) ...[
                       SettingsToggle(
                         title: 'Daily Reminders',
                         subtitle: 'Get reminded to complete activities',
-                        value: user.notifications.dailyReminders,
+                        value: _dailyReminders,
                         onChanged: (value) {
-                          profileProvider.updateNotificationPreferences(
-                            dailyReminders: value,
-                          );
+                          if (isGuest) {
+                            setState(() => _dailyReminders = value);
+                          } else {
+                            profileProvider.updateNotificationPreferences(
+                              dailyReminders: value,
+                            );
+                          }
                         },
                       ),
                       SettingsToggle(
                         title: 'Achievement Alerts',
                         subtitle: 'Get notified when you earn badges',
-                        value: user.notifications.achievementAlerts,
+                        value: _achievementAlerts,
                         onChanged: (value) {
-                          profileProvider.updateNotificationPreferences(
-                            achievementAlerts: value,
-                          );
+                          if (isGuest) {
+                            setState(() => _achievementAlerts = value);
+                          } else {
+                            profileProvider.updateNotificationPreferences(
+                              achievementAlerts: value,
+                            );
+                          }
                         },
                       ),
                     ],

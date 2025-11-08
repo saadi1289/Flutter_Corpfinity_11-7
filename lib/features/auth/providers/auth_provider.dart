@@ -224,8 +224,9 @@ class AuthProvider with ChangeNotifier {
       }
 
       // TODO: Validate token with backend and fetch user data
-      // For now, just check if token exists
-      return true;
+      // For now, require that _currentUser is populated (e.g., from sign-in or sign-up flow)
+      // This prevents navigating to Home with an empty user which causes Profile to show no data.
+      return _currentUser != null;
     } catch (e) {
       return false;
     }

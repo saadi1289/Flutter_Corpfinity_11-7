@@ -7,9 +7,9 @@ import '../constants/dimensions.dart';
 /// 
 /// Features:
 /// - Height: 120px
-/// - Background: warmOrange with 10% opacity
-/// - Border: 2px solid warmOrange
-/// - Full-width button with warmOrange background and white text
+/// - Background: calmBlue with 10% opacity (aligned with app palette)
+/// - Border: 2px solid calmBlue
+/// - Full-width button with calmBlue background and white text
 /// 
 /// Requirements: 5.1, 5.2, 5.3, 5.4, 5.5
 class CreateChallengeCard extends StatefulWidget {
@@ -32,7 +32,7 @@ class _CreateChallengeCardState extends State<CreateChallengeCard> {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: widget.semanticLabel ?? 'Create a new wellness challenge',
+      label: widget.semanticLabel ?? 'Start your wellness challenge',
       button: true,
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovering = true),
@@ -40,11 +40,10 @@ class _CreateChallengeCardState extends State<CreateChallengeCard> {
         child: Container(
           height: 120,
           decoration: BoxDecoration(
-            // Keep original background to satisfy tests
-            color: AppColors.warmOrange.withOpacity(0.1),
+            color: AppColors.calmBlue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(AppDimensions.cardBorderRadius),
             border: Border.all(
-              color: AppColors.warmOrange,
+              color: AppColors.calmBlue,
               width: 2,
             ),
           ),
@@ -64,7 +63,7 @@ class _CreateChallengeCardState extends State<CreateChallengeCard> {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          AppColors.warmOrange.withOpacity(0.25),
+                          AppColors.calmBlue.withOpacity(0.25),
                           Colors.transparent,
                         ],
                       ),
@@ -84,8 +83,7 @@ class _CreateChallengeCardState extends State<CreateChallengeCard> {
                     child: ElevatedButton(
                       onPressed: widget.onTap,
                       style: ElevatedButton.styleFrom(
-                        // Keep original styles to satisfy tests
-                        backgroundColor: AppColors.warmOrange,
+                        backgroundColor: AppColors.calmBlue,
                         foregroundColor: AppColors.white,
                         elevation: _isHovering ? 4 : 2,
                         shadowColor: Colors.black26,
@@ -107,7 +105,7 @@ class _CreateChallengeCardState extends State<CreateChallengeCard> {
                           Icon(Icons.flag_rounded, size: 20, color: AppColors.white),
                           SizedBox(width: AppDimensions.spacing8),
                           Text(
-                            'Create Challenge',
+                            'Start Your Challenge',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
